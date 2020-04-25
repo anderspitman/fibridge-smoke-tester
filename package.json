@@ -1,0 +1,23 @@
+{
+  "name": "fibridge-smoke-tester",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "fibridge-smoke-tester": "./cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "omnistreams": "^0.9.0",
+    "ws": "^7.2.3"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^11.1.0",
+    "@rollup/plugin-node-resolve": "^7.1.3",
+    "rollup": "^2.7.2"
+  }
+}
