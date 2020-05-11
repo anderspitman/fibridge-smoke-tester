@@ -20,8 +20,17 @@ const WebSocket = require('ws');
   const transport = new WebSocketTransport(ws);
   const mux = new Multiplexer(transport);
 
+
   const promise = new Promise(async (resolve, reject) => {
     let id = null;
+
+    // must get id within 3 seconds
+    let gotIdInTime = false;
+    setTimeout(() => {
+      if (!gotIdInTime) {
+        reject();
+      }
+    }, 3000);
 
     mux.onControlMessage((rawMessage) => {
       const message = decodeObject(rawMessage)
@@ -31,24 +40,30 @@ const WebSocket = require('ws');
         case 'setId':
           id = rpc.params;
 
+          gotIdInTime = true;
+
           http.get(`https://${addr}/${id}/dummy_filename.txt`, (res) => {
 
-              let allData = '';
+            let allData = '';
 
-              res.on('data', (data) => {
-                allData += data;
-              });
-
-              res.on('end', () => {
-                if (allData === "GATTACA") {
-                  resolve();
-                }
-                else {
-                  reject();
-                }
-              });
-
+            res.on('data', (data) => {
+              allData += data;
             });
+
+            res.on('end', () => {
+              if (allData === "GATTACA") {
+                resolve();
+              }
+              else {
+                reject();
+              }
+            });
+
+            res.on('error', (e) => {
+              reject();
+            });
+
+          });
           break;
         case 'getFile':
 
